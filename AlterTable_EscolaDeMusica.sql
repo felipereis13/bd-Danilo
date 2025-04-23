@@ -1,0 +1,12 @@
+USE EscolaDeMusica;
+
+ALTER TABLE Musico ADD COLUMN Email VARCHAR(100);
+ALTER TABLE Instrumento ADD COLUMN Descricao TEXT;
+ALTER TABLE Sinfonia MODIFY COLUMN Nome VARCHAR(100);
+ALTER TABLE Pertence ADD COLUMN DataEntrada DATE;
+ALTER TABLE Orquestra ADD COLUMN EmailContato VARCHAR(100);
+ALTER TABLE Musico MODIFY COLUMN Sexo ENUM('M', 'F') NOT NULL;
+ALTER TABLE Endereco CHANGE COLUMN Numero NumeroCasa INT;
+CREATE INDEX idx_nome_musico ON Musico(Nome);
+ALTER TABLE Endereco DROP COLUMN Complemento;
+ALTER TABLE Telefone ADD CONSTRAINT unique_telefone_numero UNIQUE (Numero);
