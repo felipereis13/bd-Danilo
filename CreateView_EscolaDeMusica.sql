@@ -1,88 +1,100 @@
 USE EscolaDeMusica;
 
-CREATE VIEW view_musicos_completo AS
-SELECT 
-  M.CPF,
-  M.Nome AS Musico,
-  M.Salario,
-  M.Nacionalidade,
-  M.DataNascimento,
-  M.Sexo,
-  I.Nome AS Instrumento,
-  F.Nome AS Funcao,
-  E.Cidade,
-  T.Numero AS Telefone
-FROM Musico M
-JOIN Instrumento I ON M.idInstrumento = I.idInstrumento
-JOIN Funcao F ON M.idFuncao = F.idFuncao
-JOIN Endereco E ON M.idEndereco = E.idEndereco
-JOIN Telefone T ON M.idTelefone = T.idTelefone;
+CREATE VIEW vMusicos AS
+	SELECT m.Nome 'NomeMusico',
+		e.UF,
+		e.Cidade,
+		e.Bairro,
+		e.Rua,
+		e.Numero,
+		e.Complemento,
+		t.numero 'Telefone'
+		FROM Musico m
+			INNER JOIN
+				Endereco e ON m.idEndereco = e.idEndereco
+			INNER JOIN
+				Telefone t ON m.idTelefone = t.idTelefone;
 
-CREATE VIEW view_musicos_orquestras AS
-SELECT 
-  M.Nome AS Musico,
-  O.Nome AS Orquestra,
-  O.Cidade,
-  O.Pais
-FROM Musico M
-JOIN Pertence P ON M.CPF = P.Musico_CPF
-JOIN Orquestra O ON P.idOrquestra = O.idOrquestra;
+CREATE VIEW vSinfonias AS
+SELECT s.Nome 'Sinfonia',
+	m.Nome 'Musico'
+	FROM Sinfonia s
+		INNER JOIN
+			Orquestra o ON s.idSinfonia = o.idSinfonia
+		INNER JOIN
+			Pertence p ON o.idOrquestra = p.idOrquestra
+		INNER JOIN
+			Musico m ON p.Musico_CPF = m.CPF
+			ORDER BY 
+				s.Nome, m.Nome;
 
-CREATE VIEW view_orquestras_com_sinfonia AS
-SELECT 
-  O.Nome AS Orquestra,
-  S.Nome AS Sinfonia,
-  S.Compositor
-FROM Orquestra O
-JOIN Sinfonia S ON O.idSinfonia = S.idSinfonia;
+CREATE VIEW vMusicosFuncoes AS
+	SELECT m.Nome 'Nome',
+		f.Nome 'Função',
+		CONCAT('R$ ', FORMAT(m.Salario, 2, 'de_DE')) AS Salario
+			FROM Musico m
+				INNER JOIN Funcao f ON m.idFuncao = f.idFuncao
+						ORDER BY m.Salario DESC;
 
-CREATE VIEW view_musicos_corda AS
-SELECT M.Nome, I.Nome AS Instrumento
-FROM Musico M
-JOIN Instrumento I ON M.idInstrumento = I.idInstrumento
-WHERE I.Tipo = 'Cordas';
+CREATE VIEW vMediaSalarial AS
+	SELECT i.Tipo 'Tipo de instrumento',
+		CONCAT('R$ ', FORMAT(AVG(m.Salario), 2, 'de_DE')) 'MédiaSalarial'
+			FROM Musico m
+				INNER JOIN Instrumento i ON m.idInstrumento = i.idInstrumento
+					GROUP BY i.Tipo
+						ORDER BY
+							AVG(m.Salario) DESC;
 
-CREATE VIEW view_sinfonias_funcao_avancada AS
-SELECT 
-  S.Nome AS Sinfonia,
-  F.Nome AS Funcao,
-  F.NivelExperiencia
-FROM Funcao F
-JOIN Sinfonia S ON F.idSinfonia = S.idSinfonia
-WHERE F.NivelExperiencia = 'Avançado';
+CREATE VIEW vSinfonias AS
+	SELECT s.Nome 'Sinfonia',
+		m.Nome 'Musico'
+		FROM Sinfonia s
+			INNER JOIN 
+				Funcao f ON s.idSinfonia = f.idSinfonia
+			INNER JOIN 
+				Musico m ON f.idFuncao = m.idFuncao
+					ORDER BY 
+						s.Nome;
 
-CREATE VIEW view_musicos_telefone AS
-SELECT 
-  M.Nome,
-  T.Numero AS Telefone
-FROM Musico M
-JOIN Telefone T ON M.idTelefone = T.idTelefone;
+CREATE VIEW vMusicoOrquestras AS
+	SELECT M.Nome,
+		O.Nome 'Orquestra'
+		FROM Musico M
+			INNER JOIN Pertence P ON M.CPF = P.Musico_CPF
+			INNER JOIN Orquestra O ON P.idOrquestra = O.idOrquestra;
+        
+CREATE VIEW vMusicosPorInstrumento AS
+	SELECT I.Tipo,
+		COUNT(M.CPF) 'TotalDeMusicos'
+		FROM Musico M
+			INNER JOIN Instrumento I ON M.idInstrumento = I.idInstrumento
+				GROUP BY I.Tipo;
 
-CREATE VIEW view_musicos_salario_maior_que_media AS
-SELECT Nome, Salario
-FROM Musico
-WHERE Salario > (
-    SELECT AVG(Salario) FROM Musico
-);
+CREATE VIEW vInstrumentoMusicos AS
+	SELECT m.Nome 'NomeMusico',
+		i.Nome 'Instrumento',
+		i.Tipo 'Tipo'
+		FROM Musico m
+			INNER JOIN
+				Instrumento i ON m.idInstrumento =i.idInstrumento;
 
-CREATE VIEW view_qtd_musicos_por_instrumento AS
-SELECT I.Nome AS Instrumento, COUNT(M.CPF) AS Quantidade
-FROM Instrumento I
-LEFT JOIN Musico M ON I.idInstrumento = M.idInstrumento
-GROUP BY I.Nome;
+CREATE VIEW vMusicos5Anos AS
+	SELECT m.Nome 'Nome',
+		f.Nome 'função',
+		f.NivelExperiencia,
+		TIMESTAMPDIFF(YEAR, f.DataFuncao, CURDATE()) 'AnosExperiencia'
+			FROM Funcao f
+				INNER JOIN Musico m ON f.idFuncao = m.idFuncao
+					WHERE TIMESTAMPDIFF(YEAR, f.DataFuncao, CURDATE()) > 3
+						ORDER BY
+							AnosExperiencia DESC, f.nome;
 
-CREATE VIEW view_orquestras_mais_5_musicos AS
-SELECT O.Nome, COUNT(P.Musico_CPF) AS Total
-FROM Orquestra O
-JOIN Pertence P ON O.idOrquestra = P.idOrquestra
-GROUP BY O.idOrquestra
-HAVING COUNT(P.Musico_CPF) > 5;
-
-CREATE VIEW view_musicos_sem_orquestra AS
-SELECT M.Nome
-FROM Musico M
-LEFT JOIN Pertence P ON M.CPF = P.Musico_CPF
-WHERE P.idOrquestra IS NULL;
+CREATE VIEW vInstrumentosNUsados AS
+	SELECT i.Nome 'Instrumento'
+		FROM Instrumento i
+			LEFT JOIN Musico m ON i.idInstrumento = m.idInstrumento
+				WHERE m.CPF IS NULL
+					GROUP BY i.Nome;
 
 
 
