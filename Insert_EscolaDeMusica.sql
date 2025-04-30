@@ -31,19 +31,19 @@ INSERT INTO Instrumento (Nome, Tipo) VALUES
 
 INSERT INTO Funcao (DataFuncao, NivelExperiencia, Nome, Categoria, idSinfonia) VALUES
 ('2023-01-10', 'Avançado', 'Spalla', 'Cordas', 1), ('2023-02-11', 'Intermediário', 'Solista', 'Cordas', 2),
-('2023-03-12', 'Iniciante', 'Apoio', 'Cordas', 3), ('2023-04-13', 'Avançado', 'Solista', 'Madeiras', 4),
-('2023-05-14', 'Intermediário', 'Apoio', 'Metais', 5), ('2023-06-15', 'Avançado', 'Regente', 'Regência', 6),
-('2023-07-16', 'Avançado', 'Solista', 'Cordas', 7), ('2023-08-17', 'Intermediário', 'Apoio', 'Madeiras', 8),
-('2023-09-18', 'Iniciante', 'Estagiário', 'Cordas', 9), ('2023-10-19', 'Avançado', 'Spalla', 'Cordas', 10);
+('2023-03-12', 'Iniciante', 'Apoio', 'Cordas', 3), ('2018-04-13', 'Avançado', 'Solista', 'Madeiras', 4),
+('2023-05-14', 'Intermediário', 'Apoio', 'Metais', 5), ('2017-06-15', 'Avançado', 'Regente', 'Regência', 6),
+('2023-07-16', 'Avançado', 'Solista', 'Cordas', 7), ('2022-08-17', 'Intermediário', 'Apoio', 'Madeiras', 8),
+('2023-09-18', 'Iniciante', 'Estagiário', 'Cordas', 9), ('2020-10-19', 'Avançado', 'Spalla', 'Cordas', 10);
 
 INSERT INTO Musico (CPF, Nome, Nacionalidade, DataNascimento, Sexo, Salario, idEndereco, idTelefone, idInstrumento, idFuncao) VALUES
-('12345678901', 'João Silva', 'Brasileira', '1990-01-01', 'M', 3000.00, 1, 1, 1, 1),
+('12345678901', 'João Silva', 'Brasileira', '1990-01-01', 'M', 3000.00, 1, 1, 2, 1),
 ('12345678902', 'Maria Souza', 'Brasileira', '1985-05-15', 'F', 3200.00, 2, 2, 2, 2),
-('12345678903', 'Pedro Lima', 'Brasileira', '1992-03-20', 'M', 2800.00, 3, 3, 3, 3),
+('12345678903', 'Pedro Lima', 'Brasileira', '1992-03-20', 'M', 2800.00, 3, 3, 4, 3),
 ('12345678904', 'Ana Paula', 'Brasileira', '1994-07-22', 'F', 3100.00, 4, 4, 4, 4),
-('12345678905', 'Carlos Mendes', 'Brasileira', '1988-11-30', 'M', 2900.00, 5, 5, 5, 5),
-('12345678906', 'Mariana Rocha', 'Brasileira', '1991-09-12', 'F', 3050.00, 6, 6, 6, 6),
-('12345678907', 'Lucas Almeida', 'Brasileira', '1993-04-18', 'M', 3150.00, 7, 7, 7, 7),
+('12345678905', 'Carlos Mendes', 'Brasileira', '1988-11-30', 'M', 2900.00, 5, 5, 3, 5),
+('12345678906', 'Mariana Rocha', 'Brasileira', '1991-09-12', 'F', 3050.00, 6, 6, 2, 6),
+('12345678907', 'Lucas Almeida', 'Brasileira', '1993-04-18', 'M', 3150.00, 7, 7, 5, 7),
 ('12345678908', 'Fernanda Costa', 'Brasileira', '1996-08-23', 'F', 3250.00, 8, 8, 8, 8),
 ('12345678909', 'Bruno Dias', 'Brasileira', '1987-12-25', 'M', 2800.00, 9, 9, 9, 9),
 ('12345678910', 'Camila Martins', 'Brasileira', '1995-06-10', 'F', 3300.00, 10, 10, 10, 10);
